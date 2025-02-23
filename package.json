@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Management CLI for the NextPush service",
   "main": "./script/cli.js",
-  "private": "true",
   "scripts": {
     "start": "node ./bin/script/cli.js",
     "build": "tsc",

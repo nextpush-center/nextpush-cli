@@ -61,8 +61,8 @@ class AccountManager {
     OWNER: "Owner",
     COLLABORATOR: "Collaborator",
   };
-  public static SERVER_URL = "https://api.nextpush.dev"; // TODO: make api.nextpush.center
-  public static APP_SERVER_URL = "https://nextpush.dev"; // TODO: make nextpush.center
+  public static SERVER_URL = "https://api.nextpush.center"; 
+  public static APP_SERVER_URL = "https://nextpush.center"; 
 
   private static API_VERSION: number = 2;
 

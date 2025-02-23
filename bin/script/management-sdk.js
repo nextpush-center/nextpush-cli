@@ -29,8 +29,8 @@ class AccountManager {
         OWNER: "Owner",
         COLLABORATOR: "Collaborator",
     };
-    static SERVER_URL = "https://api.nextpush.dev";
-    static APP_SERVER_URL = "https://nextpush.dev";
+    static SERVER_URL = "https://api.nextpush.center";
+    static APP_SERVER_URL = "https://nextpush.center";
     static API_VERSION = 2;
     static ERROR_GATEWAY_TIMEOUT = 504; // Used if there is a network error
     static ERROR_INTERNAL_SERVER = 500;
