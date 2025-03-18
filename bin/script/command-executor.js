@@ -524,7 +524,7 @@ function printAppList(format, apps) {
         const headers = ["Name", "Deployments"];
         printTable(headers, (dataSource) => {
             apps.forEach((app, index) => {
-                const row = [app.name, wordwrap(50)(app.deployments.join(", "))];
+                const row = [app.owner.isCurrentAccount ? app.name : `${app.owner.username}/${app.name}`, wordwrap(50)(app.deployments.join(", "))];
                 dataSource.push(row);
             });
         });

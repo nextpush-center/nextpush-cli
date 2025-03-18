@@ -113,6 +113,10 @@ export interface App {
   /*key*/ name: string;
   /*generated*/ deployments?: string[];
   os?: string;
+  owner?: {
+    username: string;
+    isCurrentAccount?: boolean;
+  }
 }
 
 /*in*/

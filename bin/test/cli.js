@@ -109,6 +109,9 @@ class SdkStub {
                     "a@a.com": { permission: "Owner", isCurrentAccount: true },
                 },
                 deployments: ["Production", "Staging"],
+                owner: {
+                    username: "a"
+                }
             },
             {
                 name: "b",
@@ -116,6 +119,9 @@ class SdkStub {
                     "a@a.com": { permission: "Owner", isCurrentAccount: true },
                 },
                 deployments: ["Production", "Staging"],
+                owner: {
+                    username: "b"
+                }
             },
         ]);
     }

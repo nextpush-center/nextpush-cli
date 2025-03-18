@@ -153,27 +153,32 @@ class AccountManager {
     }
     // Apps
     getApps() {
-        return this.get(urlEncode(["/apps"])).then((res) => res.body.apps);
+        const [org, app] = this.getOwnerApp("");
+        return this.get(urlEncode([`/orgs/${org}/apps`])).then((res) => res.body.apps);
     }
     getApp(appName) {
         const [org, app] = this.getOwnerApp(appName);
-        return this.get(urlEncode([`/apps/${app}?org=${org}`])).then((res) => res.body.app);
+        return this.get(urlEncode([`/orgs/${org}/apps/${app}`])).then((res) => res.body.app);
     }
     addApp(appName, os) {
+        const [org] = this.getOwnerApp("");
         const app = { name: appName, os };
-        return this.post(urlEncode(["/apps/"]), JSON.stringify(app), /*expectResponseBody=*/ false).then(() => app);
+        return this.post(urlEncode([`/orgs/${org}/apps`]), JSON.stringify(app), /*expectResponseBody=*/ false).then(() => app);
     }
     removeApp(appName) {
-        return this.del(urlEncode([`/apps/${appName}`])).then(() => null);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.del(urlEncode([`/orgs/${org}/apps/${app}`])).then(() => null);
     }
     renameApp(oldAppName, newAppName) {
-        return this.patch(urlEncode([`/apps/${oldAppName}`]), JSON.stringify({ name: newAppName })).then(() => null);
+        const [org, app] = this.getOwnerApp(oldAppName);
+        return this.patch(urlEncode([`/orgs/${org}/apps/${app}`]), JSON.stringify({ name: newAppName })).then(() => null);
     }
     transferApp(appName, email) {
-        return this.post(urlEncode([`/apps/${appName}/transfer/${email}`]), /*requestBody=*/ null, /*expectResponseBody=*/ false).then(() => null);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.post(urlEncode([`/orgs/${org}/apps/${app}/transfer/${email}`]), /*requestBody=*/ null, /*expectResponseBody=*/ false).then(() => null);
     }
     getOwnerApp(appName) {
-        let org = "";
+        let org = "my";
         let app = appName;
         if (appName.includes("/")) {
             const appNameParts = appName.split("/");
@@ -184,47 +189,58 @@ class AccountManager {
     }
     // Collaborators
     getCollaborators(appName) {
-        return this.get(urlEncode([`/apps/${appName}/collaborators`])).then((res) => res.body.collaborators);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.get(urlEncode([`/orgs/${org}/apps/${app}/collaborators`])).then((res) => res.body.collaborators);
     }
     addCollaborator(appName, email) {
-        return this.post(urlEncode([`/apps/${appName}/collaborators/${email}`]), 
+        const [org, app] = this.getOwnerApp(appName);
+        return this.post(urlEncode([`/orgs/${org}/apps/${app}/collaborators/${email}`]), 
         /*requestBody=*/ null, 
         /*expectResponseBody=*/ false).then(() => null);
     }
     removeCollaborator(appName, email) {
-        return this.del(urlEncode([`/apps/${appName}/collaborators/${email}`])).then(() => null);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.del(urlEncode([`/orgs/${org}/apps/${app}/collaborators/${email}`])).then(() => null);
     }
     // Deployments
     addDeployment(appName, deploymentName, deploymentKey) {
         const deployment = { name: deploymentName, key: deploymentKey };
-        return this.post(urlEncode([`/apps/${appName}/deployments/`]), JSON.stringify(deployment), /*expectResponseBody=*/ true).then((res) => res.body.deployment);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.post(urlEncode([`/orgs/${org}/apps/${app}/deployments/`]), JSON.stringify(deployment), /*expectResponseBody=*/ true).then((res) => res.body.deployment);
     }
     clearDeploymentHistory(appName, deploymentName) {
-        return this.del(urlEncode([`/apps/${appName}/deployments/${deploymentName}/history`])).then(() => null);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.del(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}/history`])).then(() => null);
     }
     getDeployments(appName) {
-        return this.get(urlEncode([`/apps/${appName}/deployments/`])).then((res) => res.body.deployments);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.get(urlEncode([`/orgs/${org}/apps/${app}/deployments/`])).then((res) => res.body.deployments);
     }
     getDeployment(appName, deploymentName) {
         const [org, app] = this.getOwnerApp(appName);
-        return this.get(urlEncode([`/apps/${app}/deployments/${deploymentName}?org=${org}`])).then((res) => res.body.deployment);
+        return this.get(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}`])).then((res) => res.body.deployment);
     }
     renameDeployment(appName, oldDeploymentName, newDeploymentName) {
-        return this.patch(urlEncode([`/apps/${appName}/deployments/${oldDeploymentName}`]), JSON.stringify({ name: newDeploymentName })).then(() => null);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.patch(urlEncode([`/orgs/${org}/apps/${app}/deployments/${oldDeploymentName}`]), JSON.stringify({ name: newDeploymentName })).then(() => null);
     }
     removeDeployment(appName, deploymentName) {
-        return this.del(urlEncode([`/apps/${appName}/deployments/${deploymentName}`])).then(() => null);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.del(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}`])).then(() => null);
     }
     getDeploymentMetrics(appName, deploymentName) {
-        return this.get(urlEncode([`/apps/${appName}/deployments/${deploymentName}/metrics`])).then((res) => res.body.metrics);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.get(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}/metrics`])).then((res) => res.body.metrics);
     }
     getDeploymentHistory(appName, deploymentName) {
-        return this.get(urlEncode([`/apps/${appName}/deployments/${deploymentName}/history`])).then((res) => res.body.history);
+        const [org, app] = this.getOwnerApp(appName);
+        return this.get(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}/history`])).then((res) => res.body.history);
     }
     release(appName, deploymentName, filePath, targetBinaryVersion, updateMetadata, uploadProgressCallback) {
         return Promise((resolve, reject, notify) => {
             updateMetadata.appVersion = targetBinaryVersion;
-            const request = superagent.post(this._serverUrl + urlEncode([`/apps/${appName}/deployments/${deploymentName}/release`]));
+            const [org, app] = this.getOwnerApp(appName);
+            const request = superagent.post(this._serverUrl + urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}/release`]));
             this.attachCredentials(request);
             const getPackageFilePromise = Q.Promise((resolve, reject) => {
                 this.packageFileFromPath(filePath)
@@ -283,16 +299,19 @@ class AccountManager {
     patchRelease(appName, deploymentName, label, updateMetadata) {
         updateMetadata.label = label;
         const requestBody = JSON.stringify({ packageInfo: updateMetadata });
-        return this.patch(urlEncode([`/apps/${appName}/deployments/${deploymentName}/release`]), requestBody, 
+        const [org, app] = this.getOwnerApp(appName);
+        return this.patch(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}/release`]), requestBody, 
         /*expectResponseBody=*/ false).then(() => null);
     }
     promote(appName, sourceDeploymentName, destinationDeploymentName, updateMetadata) {
         const requestBody = JSON.stringify({ packageInfo: updateMetadata });
-        return this.post(urlEncode([`/apps/${appName}/deployments/${sourceDeploymentName}/promote/${destinationDeploymentName}`]), requestBody, 
+        const [org, app] = this.getOwnerApp(appName);
+        return this.post(urlEncode([`/orgs/${org}/apps/${app}/deployments/${sourceDeploymentName}/promote/${destinationDeploymentName}`]), requestBody, 
         /*expectResponseBody=*/ false).then(() => null);
     }
     rollback(appName, deploymentName, targetRelease) {
-        return this.post(urlEncode([`/apps/${appName}/deployments/${deploymentName}/rollback/${targetRelease || ``}`]), 
+        const [org, app] = this.getOwnerApp(appName);
+        return this.post(urlEncode([`/orgs/${org}/apps/${app}/deployments/${deploymentName}/rollback/${targetRelease || ``}`]), 
         /*requestBody=*/ null, 
         /*expectResponseBody=*/ false).then(() => null);
     }

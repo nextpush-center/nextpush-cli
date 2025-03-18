@@ -672,7 +672,7 @@ function printAppList(format: string, apps: App[]): void {
     const headers = ["Name", "Deployments"];
     printTable(headers, (dataSource: any[]): void => {
       apps.forEach((app: App, index: number): void => {
-        const row = [app.name, wordwrap(50)(app.deployments.join(", "))];
+        const row = [app.owner.isCurrentAccount ? app.name : `${app.owner.username}/${app.name}`, wordwrap(50)(app.deployments.join(", "))];
         dataSource.push(row);
       });
     });

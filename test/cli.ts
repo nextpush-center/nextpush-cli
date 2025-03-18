@@ -124,6 +124,9 @@ export class SdkStub {
           "a@a.com": { permission: "Owner", isCurrentAccount: true },
         },
         deployments: ["Production", "Staging"],
+        owner: {
+          username: "a"
+        }
       },
       <codePush.App>{
         name: "b",
@@ -131,6 +134,9 @@ export class SdkStub {
           "a@a.com": { permission: "Owner", isCurrentAccount: true },
         },
         deployments: ["Production", "Staging"],
+        owner: {
+          username: "b"
+        }
       },
     ]);
   }
